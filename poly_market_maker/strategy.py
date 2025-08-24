@@ -10,11 +10,13 @@ from poly_market_maker.constants import MAX_DECIMALS
 from poly_market_maker.strategies.base_strategy import BaseStrategy
 from poly_market_maker.strategies.amm_strategy import AMMStrategy
 from poly_market_maker.strategies.bands_strategy import BandsStrategy
+from poly_market_maker.strategies.safe_spread_strategy import SafeSpreadStrategy
 
 
 class Strategy(Enum):
     AMM = "amm"
     BANDS = "bands"
+    SAFE_SPREAD = "safe_spread"
 
     @classmethod
     def _missing_(cls, value):
@@ -46,6 +48,8 @@ class StrategyManager:
                 self.strategy = AMMStrategy(config)
             case Strategy.BANDS:
                 self.strategy = BandsStrategy(config)
+            case Strategy.SAFE_SPREAD:
+                self.strategy = SafeSpreadStrategy(config)
             case _:
                 raise Exception("Invalid strategy")
 

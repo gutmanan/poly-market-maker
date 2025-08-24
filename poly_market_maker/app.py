@@ -21,10 +21,11 @@ class App:
     """Market maker keeper on Polymarket CLOB"""
 
     def __init__(self, args: list):
-        setup_logging()
+        setup_logging(log_level=logging.INFO)
         self.logger = logging.getLogger(__name__)
 
         args = get_args(args)
+
         self.sync_interval = args.sync_interval
 
         # self.min_tick = args.min_tick
@@ -51,25 +52,16 @@ class App:
         )
         self.contracts = Contracts(self.web3, self.gas_station)
 
-        self.market = Market(
-            args.condition_id,
-            self.clob_api.get_collateral_address(),
-        )
+        self.market = Market(args.condition_id, self.clob_api.get_collateral_address())
 
         self.price_feed = PriceFeedClob(self.market, self.clob_api)
 
-        self.order_book_manager = OrderBookManager(
-            args.refresh_frequency, max_workers=1
-        )
+        self.order_book_manager = OrderBookManager(args.refresh_frequency, max_workers=1)
         self.order_book_manager.get_orders_with(self.get_orders)
         self.order_book_manager.get_balances_with(self.get_balances)
-        self.order_book_manager.cancel_orders_with(
-            lambda order: self.clob_api.cancel_order(order.id)
-        )
-        self.order_book_manager.place_orders_with(self.place_order)
-        self.order_book_manager.cancel_all_orders_with(
-            lambda _: self.clob_api.cancel_all_orders()
-        )
+        self.order_book_manager.cancel_orders_with(lambda order: self.clob_api.cancel_order(order.id))
+        self.order_book_manager.place_orders_with(self.place_order if args.dry_run is False else self.simulate_order)
+        self.order_book_manager.cancel_all_orders_with(lambda _: self.clob_api.cancel_all_orders())
         self.order_book_manager.start()
 
         self.strategy_manager = StrategyManager(
@@ -195,6 +187,10 @@ class App:
             id=order_id,
             token=new_order.token,
         )
+
+    def simulate_order(self, new_order: Order) -> Order:
+        self.logger.info(f"[SIMULATED] Would place order: {new_order}")
+        return new_order
 
     def approve(self):
         """

@@ -20,4 +20,5 @@ exec python3 -m poly_market_maker \
     --clob-api-url "$CLOB_API_URL" \
     --condition-id "$CONDITION_ID" \
     --strategy "$STRATEGY" \
-    --strategy-config "$CONFIG"
+    --strategy-config "$CONFIG" \
+    --dry-run "${DRY_RUN:-false}"

@@ -86,4 +86,12 @@ def get_args(args) -> dict:
         help="Strategy configuration file path",
     )
 
+    parser.add_argument(
+        "--dry-run",
+        type=bool,
+        default=False,
+        required=False,
+        help="Whether to run in dry mode (no orders will be placed)",
+    )
+
     return parser.parse_args(args)

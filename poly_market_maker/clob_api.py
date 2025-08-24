@@ -117,7 +117,7 @@ class ClobApi:
             if resp and resp.get("success") and resp.get("orderID"):
                 order_id = resp.get("orderID")
                 self.logger.info(
-                    f"Succesfully placed new order: Order[id={order_id},price={price},size={size},side={side},tokenID={token_id}]!"
+                    f"Successfully placed new order: Order[id={order_id},price={price},size={size},side={side},tokenID={token_id}]!"
                 )
                 return order_id
 

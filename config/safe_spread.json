@@ -1,0 +1,13 @@
+{
+  "safe_spread": {
+    "targetSpread": 0.05,
+    "orderSize": 5.0,
+    "maxBids": 1,
+    "maxAsks": 1,
+    "cancelIfAwayBy": 0.01,
+    "maxInventoryPerToken": 20.0,
+    "maxNotionalPerSide": 30.0,
+    "skewPerUnit": 0.001,
+    "minPlaceSize": 1.0
+  }
+}
